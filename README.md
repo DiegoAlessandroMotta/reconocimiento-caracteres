@@ -28,8 +28,8 @@ Este proyecto implementa un sistema completo de reconocimiento de caracteres que
 ```
 reconocimiento-caracteres/
 ├── README.md                                    # Este archivo
-├── requirements.txt                             # Dependencias del proyecto
-├── requirements-lock.txt                        # Dependencias bloqueadas (reproducibilidad)
+├── requirements.txt                             # Dependencias para desarrollo local
+├── requirements-cloud.txt                       # Dependencias para despliegue en Streamlit Cloud
 ├── model/
 │   └── reconocimiento-caracteres.model.keras   # Modelo pre-entrenado
 ├── modelo-clasificador/
@@ -62,19 +62,40 @@ reconocimiento-caracteres/
    ```
 
 3. **Instalar dependencias**
+   
+   **Para desarrollo local:**
    ```bash
    pip install -r requirements.txt
    ```
+   
+   **Para despliegue en Streamlit Cloud:**
+   - Usa `requirements-cloud.txt` en lugar de `requirements.txt`
+   - Este archivo usa `opencv-python-headless` que es compatible con Streamlit Cloud
 
-## Uso
+## 💻 Uso
 
-### Ejecutar la aplicación
+### Ejecutar la aplicación localmente
 
 ```bash
+source venv/bin/activate
+
+# Ejecutar la aplicación
 streamlit run src/main.py
 ```
 
 La aplicación se abrirá en tu navegador por defecto en `http://localhost:8501`
+
+## Despliegue en Streamlit Cloud
+
+Para desplegar en Streamlit Community Cloud:
+
+1. Sube tu repositorio a GitHub
+2. Ve a [share.streamlit.io](https://share.streamlit.io)
+3. Conecta tu repositorio
+4. En "Main file path", especifica: `src/main.py`
+5. En "Requirements file", especifica: `requirements-cloud.txt`
+
+**Nota importante:** Streamlit Cloud no soporta `opencv-python` porque requiere librerías gráficas del sistema. Usa `requirements-cloud.txt` que incluye `opencv-python-headless` en su lugar.
 
 ### Modos de entrada disponibles
 
@@ -113,15 +134,16 @@ El modelo utiliza una arquitectura convolucional con:
 - **Early Stopping**: Previene overfitting
 - **Learning Rate Reduction**: Ajuste dinámico del aprendizaje
 
-## Dependencias principales
+## 📦 Dependencias principales
 
 ```
 streamlit >= 1.28.0           # Framework web interactivo
 streamlit-drawable-canvas >= 0.2.0  # Canvas para dibujar
 tensorflow >= 2.13.0          # Framework de deep learning
-opencv-python >= 4.8.0        # Procesamiento de imágenes
-pillow >= 10.0.0              # Manipulación de imágenes
 numpy >= 1.24.0               # Computación numérica
+pillow >= 10.0.0              # Manipulación de imágenes
+opencv-python >= 4.8.0        # Procesamiento de imágenes (desarrollo local)
+# opencv-python-headless >= 4.8.0  # Para despliegue en Streamlit Cloud
 ```
 
-Para ver todas las dependencias, consulta `requirements.txt` y `requirements-lock.txt`.
+Para ver todas las dependencias, consulta `requirements.txt` (desarrollo local) o `requirements-cloud.txt` (despliegue en la nube).
