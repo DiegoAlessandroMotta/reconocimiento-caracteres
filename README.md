@@ -15,13 +15,13 @@ Este proyecto implementa un sistema completo de reconocimiento de caracteres que
 
 - Modelo pre-entrenado con alta precisión
 - Interfaz web interactiva con Streamlit
-- Tres modos de entrada flexible:
+- Dos modos de entrada flexible:
   - Cargar imagen desde archivo
   - Dibujar dígito en canvas
-  - Entrada manual de píxeles
 - Predicciones en tiempo real con niveles de confianza
 - Historial de predicciones
 - Preprocesamiento automático de imágenes
+- Umbral de certeza configurable
 
 ## Estructura del Proyecto
 
@@ -109,6 +109,8 @@ Para desplegar en Streamlit Community Cloud:
 2. Proporciona tu dígito (carga, dibuja o ingresa datos)
 3. Haz clic en "Predecir"
 4. Visualiza el resultado con el nivel de confianza
+
+**Nota sobre el umbral de certeza:** Si la confianza del modelo es menor al 70%, la aplicación indicará que no se pudo clasificar el dígito. Esto ayuda a evitar clasificaciones incorrectas cuando la imagen no es clara o no contiene un dígito reconocible.
 
 ## Modelo
 
