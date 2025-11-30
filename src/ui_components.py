@@ -3,7 +3,6 @@ from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 from session_state import reset_predictions, get_input_hash
 
-
 def render_mode_selector():
     st.subheader("Selecciona un método de entrada:")
     col1_mode, col2_mode = st.columns(2)
@@ -38,7 +37,6 @@ def render_upload_mode():
         reset_predictions()
         st.info("No hay imagen cargada.")
 
-
 def render_draw_mode():
     st.write("Dibuja un dígito para que el modelo lo clasifique.")
 
@@ -62,10 +60,8 @@ def render_draw_mode():
     else:
         reset_predictions()
 
-
 def render_input_mode():
     st.info("Selecciona si quieres subir una imagen o dibujar un dígito para clasificarla.")
-
 
 def render_predict_button():
     if st.session_state.current_image is not None:
@@ -80,10 +76,20 @@ def render_results(predictions):
     total_predictions = len(predictions)
     for idx, (pred, certainty) in enumerate(reversed(predictions)):
         if idx == 0:
-            st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
+            if pred is None:
+                st.markdown(f"**No se pudo identificar el dígito** (certeza: {certainty:.2f}%)")
+                st.info("La imagen no parece contener un dígito claro y el modelo no está seguro de la clasificación.")
+            else:
+                st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
         else:
             if idx == 1:
                 st.markdown("---")
                 st.markdown("**Predicciones previas:**")
-            st.markdown(f"{pred} con {certainty:.2f}% de certeza")
-    st.balloons()
+            
+            if pred is None:
+                st.markdown(f"No clasificado ({certainty:.2f}% de certeza)")
+            else:
+                st.markdown(f"{pred} con {certainty:.2f}% de certeza")
+
+    if predictions and predictions[-1][0] is not None:
+        st.balloons()
