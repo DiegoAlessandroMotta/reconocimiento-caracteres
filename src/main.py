@@ -38,8 +38,9 @@ else:
     render_input_mode()
 
 if render_predict_button():
-    new_prediction, new_certainty = predict_digit(cnn_model, st.session_state.current_image)
+    new_prediction, new_certainty, processed_image = predict_digit(cnn_model, st.session_state.current_image)
     st.session_state.predictions.append((new_prediction, new_certainty))
+    st.session_state.processed_image = processed_image
 
 if st.session_state.predictions:
     render_results(st.session_state.predictions)

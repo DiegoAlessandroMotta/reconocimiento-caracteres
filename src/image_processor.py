@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-def preprocess_image(image: Image.Image) -> np.ndarray:
+def preprocess_image(image: Image.Image) -> tuple[np.ndarray, Image.Image]:
     img_np = np.array(image.convert('L'))
 
     if np.mean(img_np) > 128:
@@ -27,6 +27,8 @@ def preprocess_image(image: Image.Image) -> np.ndarray:
     else:
         digit_img = img_resized
 
-    digit_img = digit_img.astype('float32') / 255.0
+    processed_pil = Image.fromarray(digit_img, mode='L')
+    
+    digit_img_normalized = digit_img.astype('float32') / 255.0
 
-    return np.expand_dims(digit_img, axis=(0, -1))
+    return digit_img_normalized, processed_pil

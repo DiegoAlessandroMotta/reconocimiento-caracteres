@@ -21,19 +21,20 @@ def load_trained_model(path=None):
         st.error(f"Error al cargar el modelo: {e}")
         st.stop()
 
-def predict_digit(model, image: Image.Image, certainty_threshold: float = 70.0) -> tuple[int | None, float]:
+def predict_digit(model, image: Image.Image, certainty_threshold: float = 70.0) -> tuple[int | None, float, Image.Image | None]:
     from image_processor import preprocess_image
     
     if image is None:
-        return None, 0.0
+        return None, 0.0, None
 
-    processed_image = preprocess_image(image)
-    predictions = model.predict(processed_image, verbose=0)
+    processed_array, processed_image = preprocess_image(image)
+    processed_array = np.expand_dims(processed_array, axis=(0, -1))
+    
+    predictions = model.predict(processed_array, verbose=0)
     predicted_digit = np.argmax(predictions[0])
     certainty = np.max(predictions[0]) * 100
 
-    # Si la certeza es menor al threshold, no clasificar
     if certainty < certainty_threshold:
-        return None, certainty
+        return None, certainty, processed_image
 
-    return predicted_digit, certainty
+    return predicted_digit, certainty, processed_image

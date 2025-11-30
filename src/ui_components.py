@@ -69,19 +69,25 @@ def render_predict_button():
         return st.button(button_text, key="global_predict_button_final", use_container_width=True)
     return False
 
-
 def render_results(predictions):
     st.subheader("Resultados de la Predicción:")
 
-    total_predictions = len(predictions)
-    for idx, (pred, certainty) in enumerate(reversed(predictions)):
-        if idx == 0:
-            if pred is None:
-                st.markdown(f"**No se pudo identificar el dígito** (certeza: {certainty:.2f}%)")
-                st.info("La imagen no parece contener un dígito claro y el modelo no está seguro de la clasificación.")
-            else:
-                st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
+    col1, col2, col3= st.columns([1,1,1])
+
+    with col2:
+        pred, certainty = predictions[-1]
+        if pred is None:
+            st.markdown(f"**No se pudo identificar el dígito** (certeza: {certainty:.2f}%)")
+            st.info("La imagen no parece contener un dígito claro y el modelo no está seguro de la clasificación.")
         else:
+            st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
+
+        if st.session_state.processed_image is not None:
+            st.image(st.session_state.processed_image, width=128, caption="Imagen procesada (28×28)")
+
+
+    for idx, (pred, certainty) in enumerate(reversed(predictions)):
+        if idx > 0:
             if idx == 1:
                 st.markdown("---")
                 st.markdown("**Predicciones previas:**")

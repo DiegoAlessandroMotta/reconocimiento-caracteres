@@ -9,11 +9,14 @@ def initialize_session_state():
         st.session_state.predictions = []
     if 'last_input_hash' not in st.session_state:
         st.session_state.last_input_hash = None
+    if 'processed_image' not in st.session_state:
+        st.session_state.processed_image = None
 
 def reset_predictions():
     st.session_state.current_image = None
     st.session_state.predictions = []
     st.session_state.last_input_hash = None
+    st.session_state.processed_image = None
 
 def reset_mode_state():
     reset_predictions()
