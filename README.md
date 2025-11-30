@@ -22,7 +22,7 @@ Este proyecto implementa un sistema completo de reconocimiento de caracteres que
 - Historial de predicciones
 - Preprocesamiento automático de imágenes
 - Umbral de certeza configurable
-- Preprocesamiento inteligente (mantiene relación de aspecto y recorta automáticamenet el contenido)
+- Preprocesamiento inteligente (mantiene relación de aspecto, recorta contenido y aplica normalización de brillo/contraste/gamma seguida de binarización simple para cualquier tipo de imagen)
 - Visualización de imagen procesada
 
 ## Estructura del Proyecto
@@ -30,8 +30,8 @@ Este proyecto implementa un sistema completo de reconocimiento de caracteres que
 ```
 reconocimiento-caracteres/
 ├── README.md                                    # Este archivo
-├── requirements.txt                             # Dependencias para desarrollo local
-├── requirements-cloud.txt                       # Dependencias para despliegue en Streamlit Cloud
+├── requirements.txt                             # Dependencias para despliegue en Streamlit Cloud
+├── requirements-dev.txt                         # Dependencias para desarrollo local
 ├── model/
 │   └── reconocimiento-caracteres.model.keras   # Modelo pre-entrenado
 ├── modelo-clasificador/
@@ -114,7 +114,7 @@ Para desplegar en Streamlit Community Cloud:
 
 **Nota sobre el umbral de certeza:** Si la confianza del modelo es menor al 70%, la aplicación indicará que no se pudo clasificar el dígito. Esto ayuda a evitar clasificaciones incorrectas cuando la imagen no es clara o no contiene un dígito reconocible.
 
-**Nota sobre el preprocesamiento:** El sistema mantiene automáticamente la relación de aspecto de las imágenes originales, evitando deformaciones que podrían impedir el reconocimiento correcto de dígitos en imágenes rectangulares. Además, recorta automáticamente el contenido relevante eliminando espacio vacío, lo que permite que los dígitos ocupen el máximo espacio posible en la imagen procesada.
+**Nota sobre el preprocesamiento:** El sistema mantiene automáticamente la relación de aspecto de las imágenes originales, evitando deformaciones que podrían impedir el reconocimiento correcto de dígitos en imágenes rectangulares. Además, recorta automáticamente el contenido relevante eliminando espacio vacío, y aplica binarización inteligente que detecta automáticamente si la imagen tiene buen contraste (usa método conservador) o bajo contraste (usa método adaptativo agresivo), funcionando correctamente con cualquier tipo de imagen desde escaneos perfectos hasta fotos reales con iluminación variable.
 
 ## Modelo
 
@@ -151,5 +151,3 @@ pillow >= 10.0.0              # Manipulación de imágenes
 opencv-python >= 4.8.0        # Procesamiento de imágenes (desarrollo local)
 # opencv-python-headless >= 4.8.0  # Para despliegue en Streamlit Cloud
 ```
-
-Para ver todas las dependencias, consulta `requirements.txt` (desarrollo local) o `requirements-cloud.txt` (despliegue en la nube).
