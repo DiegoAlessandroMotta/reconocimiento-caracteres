@@ -22,6 +22,8 @@ Este proyecto implementa un sistema completo de reconocimiento de caracteres que
 - Historial de predicciones
 - Preprocesamiento automático de imágenes
 - Umbral de certeza configurable
+- Preprocesamiento inteligente (mantiene relación de aspecto y recorta automáticamenet el contenido)
+- Visualización de imagen procesada
 
 ## Estructura del Proyecto
 
@@ -111,6 +113,8 @@ Para desplegar en Streamlit Community Cloud:
 4. Visualiza el resultado con el nivel de confianza
 
 **Nota sobre el umbral de certeza:** Si la confianza del modelo es menor al 70%, la aplicación indicará que no se pudo clasificar el dígito. Esto ayuda a evitar clasificaciones incorrectas cuando la imagen no es clara o no contiene un dígito reconocible.
+
+**Nota sobre el preprocesamiento:** El sistema mantiene automáticamente la relación de aspecto de las imágenes originales, evitando deformaciones que podrían impedir el reconocimiento correcto de dígitos en imágenes rectangulares. Además, recorta automáticamente el contenido relevante eliminando espacio vacío, lo que permite que los dígitos ocupen el máximo espacio posible en la imagen procesada.
 
 ## Modelo
 

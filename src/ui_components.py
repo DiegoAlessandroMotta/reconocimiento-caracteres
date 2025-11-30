@@ -40,11 +40,11 @@ def render_upload_mode():
 def render_draw_mode():
     st.write("Dibuja un dígito para que el modelo lo clasifique.")
 
-    col_left_canvas, col_center_canvas, col_right_canvas = st.columns([1, 2, 1])
-    with col_center_canvas:
+    col_left, col_center, col_right = st.columns([1, 2, 1])
+    with col_center:
         canvas_result = st_canvas(
             fill_color="rgba(255, 255, 255, 0.0)",
-            stroke_width=20,
+            stroke_width=25,
             stroke_color="#000000",
             background_color="#FFFFFF",
             update_streamlit=True,
@@ -72,9 +72,9 @@ def render_predict_button():
 def render_results(predictions):
     st.subheader("Resultados de la Predicción:")
 
-    col1, col2, col3= st.columns([1,1,1])
+    col_left, col_center, col_right = st.columns([1,2,1])
 
-    with col2:
+    with col_center:
         pred, certainty = predictions[-1]
         if pred is None:
             st.markdown(f"**No se pudo identificar el dígito** (certeza: {certainty:.2f}%)")
