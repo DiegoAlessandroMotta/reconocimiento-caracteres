@@ -24,18 +24,18 @@ initialize_session_state()
 
 render_mode_selector()
 
-current_input_hash = get_input_hash()
-if st.session_state.last_input_hash is not None and current_input_hash != st.session_state.last_input_hash:
-    st.session_state.predictions = []
-
-st.session_state.last_input_hash = current_input_hash
-
 if st.session_state.current_mode == 'upload':
     render_upload_mode()
 elif st.session_state.current_mode == 'draw':
     render_draw_mode()
 else:
     render_input_mode()
+
+current_input_hash = get_input_hash()
+if current_input_hash != st.session_state.last_input_hash:
+    st.session_state.predictions = []
+
+st.session_state.last_input_hash = current_input_hash
 
 if render_predict_button():
     new_prediction, new_certainty, processed_image = predict_digit(cnn_model, st.session_state.current_image)
