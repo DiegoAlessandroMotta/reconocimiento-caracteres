@@ -7,12 +7,6 @@ from PIL import Image
 
 @st.cache_resource
 def load_trained_model(path=None):
-    if path is None:
-        script_dir = Path(__file__).parent.absolute()
-        project_root = script_dir.parent
-        # path = project_root / "model" / "reconocimiento-caracteres.model.keras"
-        path = project_root / "model" / "hog-descriptor.model.h5"
-
     try:
         if not Path(path).exists():
             raise FileNotFoundError(f"El archivo del modelo no existe: {path}")

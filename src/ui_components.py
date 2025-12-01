@@ -63,11 +63,21 @@ def render_draw_mode():
 def render_input_mode():
     st.info("Selecciona si quieres subir una imagen o dibujar un dígito para clasificarla.")
 
-def render_predict_button():
-    if st.session_state.current_image is not None:
-        button_text = "Volver a predecir" if st.session_state.predictions else "Realizar predicción"
-        return st.button(button_text, key="global_predict_button_final", use_container_width=True)
-    return False
+def render_predict_buttons():
+    if st.session_state.current_image is None:
+        return None
+
+    col1, col2 = st.columns(2)
+    with col1:
+        cnn_clicked = st.button("Predecir (CNN)", key="predict_cnn_button")
+    with col2:
+        hog_clicked = st.button("Predecir (HOG)", key="predict_hog_button")
+
+    if cnn_clicked:
+        return 'cnn'
+    if hog_clicked:
+        return 'hog'
+    return None
 
 def render_results(predictions):
     st.subheader("Resultados de la Predicción:")
@@ -75,27 +85,46 @@ def render_results(predictions):
     col_left, col_center, col_right = st.columns([1,2,1])
 
     with col_center:
-        pred, certainty = predictions[-1]
+        last_pred = predictions[-1]
+        if len(last_pred) == 3:
+            pred, certainty, model_tag = last_pred
+        else:
+            pred, certainty = last_pred
+            model_tag = None
+
         if pred is None:
             st.markdown(f"**No se pudo identificar el dígito** (certeza: {certainty:.2f}%)")
             st.info("La imagen no parece contener un dígito claro y el modelo no está seguro de la clasificación.")
         else:
-            st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
+            if model_tag:
+                st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%** [{model_tag}]")
+            else:
+                st.markdown(f"**Predicción: {pred} con una certeza del {certainty:.2f}%**")
 
         if st.session_state.processed_image is not None:
             st.image(st.session_state.processed_image, width=128, caption="Imagen procesada (28×28)")
 
-
-    for idx, (pred, certainty) in enumerate(reversed(predictions)):
+    for idx, entry in enumerate(reversed(predictions)):
         if idx > 0:
             if idx == 1:
                 st.markdown("---")
                 st.markdown("**Predicciones previas:**")
-            
-            if pred is None:
-                st.markdown(f"No clasificado ({certainty:.2f}% de certeza)")
+            if len(entry) == 3:
+                pred, certainty, model_tag = entry
             else:
-                st.markdown(f"{pred} con {certainty:.2f}% de certeza")
+                pred, certainty = entry
+                model_tag = None
+
+            if pred is None:
+                if model_tag:
+                    st.markdown(f"No clasificado ({certainty:.2f}% de certeza) [{model_tag}]")
+                else:
+                    st.markdown(f"No clasificado ({certainty:.2f}% de certeza)")
+            else:
+                if model_tag:
+                    st.markdown(f"{pred} con {certainty:.2f}% de certeza [{model_tag}]")
+                else:
+                    st.markdown(f"{pred} con {certainty:.2f}% de certeza")
 
     if predictions and predictions[-1][0] is not None:
         st.balloons()

@@ -11,6 +11,10 @@ def initialize_session_state():
         st.session_state.last_input_hash = None
     if 'processed_image' not in st.session_state:
         st.session_state.processed_image = None
+    if 'cnn_model' not in st.session_state:
+        st.session_state.cnn_model = None
+    if 'hog_model' not in st.session_state:
+        st.session_state.hog_model = None
 
 def reset_predictions():
     st.session_state.current_image = None
@@ -23,7 +27,21 @@ def reset_mode_state():
     st.session_state.current_mode = None
 
 def get_current_prediction():
-    return st.session_state.predictions[-1] if st.session_state.predictions else (None, 0.0)
+    if not st.session_state.predictions:
+        return (None, 0.0, None)
+    last = st.session_state.predictions[-1]
+    if len(last) == 3:
+        return last
+    elif len(last) == 2:
+        pred, certainty = last
+        return (pred, certainty, None)
+    else:
+        try:
+            pred = last[0]
+            certainty = float(last[1])
+            return (pred, certainty, None)
+        except Exception:
+            return (None, 0.0, None)
 
 def get_input_hash():
     if st.session_state.current_image is not None:
