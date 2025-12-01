@@ -139,6 +139,7 @@ dmypy.json
 *.pickle
 *.h5
 *.joblib
+*.keras
 
 # Data files (opcional)
 *.csv

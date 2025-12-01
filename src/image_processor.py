@@ -58,3 +58,19 @@ def preprocess_image(image: Image.Image) -> tuple[np.ndarray, Image.Image]:
     digit_img_normalized = digit_img.astype('float32') / 255.0
 
     return digit_img_normalized, processed_pil
+
+def preprocess_image_hog(image: Image.Image) -> tuple[np.ndarray, Image.Image]:
+    digit_img_normalized, processed_pil = preprocess_image(image)
+
+    img_uint8 = (digit_img_normalized * 255).astype(np.uint8)
+
+    winSize = (28, 28)
+    blockSize = (8, 8)
+    blockStride = (2, 2)
+    cellSize = (4, 4)
+    nbins = 9
+    hog = cv2.HOGDescriptor(winSize, blockSize, blockStride, cellSize, nbins)
+
+    features = hog.compute(img_uint8).flatten().astype(np.float32)
+
+    return features, processed_pil
